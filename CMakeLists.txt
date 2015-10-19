@@ -1,0 +1,5 @@
+cmake_minimum_required(VERSION 2.8)
+project(magica)
+add_executable(magica magica.cpp libs/libarduino.o libs/libfirmataplus.o)
+find_package(OpenCV REQUIRED)
+target_link_libraries(magica ${OpenCV_LIBS})
