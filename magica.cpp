@@ -6,17 +6,23 @@
 int main(int argc, char* argv[])
 {
     Firmata firmata("/dev/ttyACM0");
-    //firmata.openPort("/dev/ttyACM0");
-    //firmata.setPinMode(13, 0x01);
+    firmata.openPort("/dev/ttyACM0");
+    firmata.setPinMode(13, 0x01);
 
     cv::VideoCapture camera(0);
     cv::Mat image;
     cv::namedWindow("camera");
 
-    while(cv::waitKey(30) != 27)
+    //while(cv::waitKey(30) != 27)
+    for(int i = 0; i < 6; i++)
     {
         //camera >> image;
         //cv::imshow("camera", image);
-        //firmata.
+
+        // Blink sketch
+        firmata.writeDigitalPin(13, 0x01);
+        cv::waitKey(1000);
+        firmata.writeDigitalPin(13, 0x00);
+        cv::waitKey(1000);
     }
 }
