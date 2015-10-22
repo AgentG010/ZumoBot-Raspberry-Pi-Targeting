@@ -23,42 +23,30 @@
 #include <iostream>
 #include <opencv2/opencv.hpp>
 #include "L.hpp"
+#include "Ball.hpp"
 
-class LDetector {
+class LDetector
+{
     public:
-        LDetector();
+        void process(cv::Mat foto);
+        cv::Mat show();
+        Ball* getBall();
 
-        void elLoad(cv::Mat foto);
+    private:
+        cv::Mat image;
+        Ball* ball;
+        // Holds the circle contours
+        std::vector<cv::Vec3f> circles;
+
+        // Thresholding
+        cv::Mat threshed;
+        std::vector<cv::Mat> channels;
+
+        // Pipeline Methods
         void elSplit();
         void elThresh();
-        cv::Mat show();
         void elFilter();
         void elContours();
-        void largest2();
-        //double angle(cv::Point pt1, cv::Point pt2, cv::Point pt0);
-        //void whatever();
-        //void populateRectangles();
-        //void loopAndPrint();
-        //void show();
-        //bool containsRectangle(Rectangle rec1, Rectangle rec2);
-        std::vector<L> getLs();
-    private:
-        //std::vector<Rectangle> rectList;
-        //std::vector<std::vector<cv::Point> > allRectangles;
-        cv::Mat image;
-
-        //FOR THE SPLITTY-RECREATEY STUFF
-        cv::Mat b;
-        std::vector<cv::Mat> a;
-        cv::Mat hueLower;
-        cv::Mat hueUpper;
-        cv::Mat valUp, valLow;
-        cv::Mat thresh;
-        cv::Mat combine;
-        std::vector<L> all;
-        std::vector<cv::Point> approx;
-        double elAngles(cv::Point pt1, cv::Point pt2, cv::Point pt3);
-        bool LosAngles(std::vector<cv::Point> vect);
 };
 
 #endif /* LDetector_hpp */

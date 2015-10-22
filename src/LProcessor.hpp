@@ -20,38 +20,27 @@
 #ifndef LProcessor_hpp
 #define LProcessor_hpp
 
-#include <vector>
 #include <opencv2/opencv.hpp>
 
-#include "L.hpp"
+#include "Ball.hpp"
 
 class LProcessor {
     public:
-        void determineL(std::vector<L>);
-        cv::Point determineCenter();
-        cv::Point determineCenter1L();
-        cv::Point determineCenter2Ls();
+        void determineL(Ball* b);
         void determineDistance();
-        void determineDistance1L();
-        void determineDistance2Ls();
         void determineAzimuth();
         void outputData();
         double getAzimuth();
         double getDistance();
     private:
         double azimuth;
-        double distanceFullHorizontal;
-        double distanceVertical;
+        double distance;
+        // TODO: fix constants
         const double focalLength = 640;
         const double imgWidth = 640;
         const double imgHeight = 480;
-	const double distanceLEdgeToCenter = 0.034925;
-	const double horizontalLLength = 0.1778;
-	const double verticalLLength = 0.1778;
-	const double fullHorizontalLLength = 0.425458;
-	int lCount = 0;
-        L firstL;
-        L secondL;
+        const double RADIUS = 0.1778;
+        Ball ball;
 };
 
 #endif /* LProcessor_hpp */

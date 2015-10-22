@@ -1,8 +1,6 @@
 #include <iostream>
 
 #include <boost/lexical_cast.hpp>
-#include <boost/asio.hpp>
-#include "NetworkController.hpp"
 #include "CmdLineInterface.hpp"
 #include "AppConfig.hpp"
 #include "GUIManager.hpp"
@@ -20,9 +18,8 @@ int main(int argc, char* argv[])
     GUIManager gui;
     VideoDevice camera;
     LProcessor processor;
-    NetworkController networkController;
 
-    //init camera
+    // Init camera
     if(config.getIsDevice())
     {
         camera.startCapture(config.getDeviceID());
@@ -30,19 +27,13 @@ int main(int argc, char* argv[])
             std::cout << "Camera ready!\n";
     }
 
-    //init networking
-    if(config.getIsNetworking())
-        networkController.startServer();
-
+    // Init GUI if not headless
     if(!config.getIsHeadless())
         gui.init();
 
-    //continuous server loop
+    // Continuous server loop
     do
     {
-        if(config.getIsNetworking())
-            networkController.waitForPing();
-
         LDetector detector;
 
         cv::Mat image;
@@ -51,25 +42,18 @@ int main(int argc, char* argv[])
         else
             image = camera.getImage(config.getIsDebug());
 
-        detector.elLoad(image);
-        detector.elSplit();
-        detector.elThresh();
-        detector.elContours();
-        detector.elFilter();
+        std::cout << "Loaded image\n";
 
-        bool foundL = true;
-        if (detector.getLs().size() > 0)
-            detector.largest2();
-        else
-            foundL = false;
-	if (detector.getLs().size() == 0)
-	    foundL = false;
+        detector.process(image);
+
+        bool foundL = detector.getBall() != NULL;
+
         if (foundL)
         {
-            processor.determineL(detector.getLs());
+            processor.determineL(detector.getBall());
             processor.determineAzimuth();
             processor.determineDistance();
-            double azimuth = processor.getAzimuth();
+            //double azimuth = processor.getAzimuth();
             double distance = processor.getDistance();
 
             if(config.getIsDebug())
@@ -89,27 +73,18 @@ int main(int argc, char* argv[])
                 gui.setImageText("Distance: " + dist_str + " m");
                 gui.show(config.getIsFile());
             }
-
-            if(config.getIsNetworking())
-            {
-                networkController.sendMessage(boost::lexical_cast<std::string> ("true") + std::string(";")
-                                              + boost::lexical_cast<std::string> (distance) + std::string(";")
-                                              + boost::lexical_cast<std::string> (azimuth));
-            }
-
         }
         else
         {
-            if(config.getIsNetworking())
-                networkController.sendMessage(boost::lexical_cast<std::string> ("false") + std::string(";"));
             if(!config.getIsHeadless())
             {
                 gui.setImage(detector.show());
-                gui.setImageText("No L's Found");                
+                gui.setImageText("Ball not found");                
                 gui.show(config.getIsFile());
             }
         }
     }
+    // Run only once if reading from a file
     while(config.getIsDevice());
 
     return 0;
