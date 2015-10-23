@@ -26,7 +26,7 @@
 
 class LProcessor {
     public:
-        void determineL(Ball* b);
+        void determineL(Ball b);
         void determineDistance();
         void determineAzimuth();
         void outputData();

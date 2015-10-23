@@ -22,9 +22,8 @@
 #include <opencv2/opencv.hpp>
 
 #include "LDetector.hpp"
-#include "L.hpp"
 
-// Load image into LDetector
+// Load image into LDetector and do the image processing
 void LDetector::process(cv::Mat foto)
 {
     image = foto;
@@ -38,68 +37,76 @@ void LDetector::process(cv::Mat foto)
 void LDetector::elSplit()
 {
     // Smooth the image a bit
-    cv::GaussianBlur(image, image, cv::Size(5, 5), 2, 2);
+    cv::GaussianBlur(image, image, cv::Size(3, 3), 1, 1);
+
+    // Separate the HSV channels
     cv::Mat hsv_temp;
     cv::cvtColor(image, hsv_temp, CV_BGR2HSV);
-    cv::split(hsv_temp, channels); //Converted RGB to HSV, split into H S and V
+    cv::split(hsv_temp, hsv_channels);
 }
 
 // Perform the thresholding
 void LDetector::elThresh()
 {
     cv::Mat hueLower, hueUpper;
+    cv::Mat satLower, satUpper;
 
-    cv::threshold(channels[0], hueLower, 100, 255, CV_THRESH_BINARY);
-    cv::threshold(channels[0], hueUpper, 115, 255, CV_THRESH_BINARY_INV);
-    threshed = hueLower & hueUpper;
+    cv::threshold(hsv_channels[0], hueLower, 100, 255, CV_THRESH_BINARY);
+    cv::threshold(hsv_channels[0], hueUpper, 115, 255, CV_THRESH_BINARY_INV);
+    cv::Mat hueThresh = hueLower & hueUpper;
+    cv::imshow("hueThreshed", hueThresh);
 
-    cv::imshow("threshed", threshed);
+    // prev values: 60, 140
+    cv::threshold(hsv_channels[1], satLower, 30, 255, CV_THRESH_BINARY);
+    cv::threshold(hsv_channels[1], satUpper, 100, 255, CV_THRESH_BINARY_INV);
+    cv::Mat satThresh = satLower & satUpper;
+    cv::imshow("saturation", satThresh);
+
+    threshed = hueThresh & satThresh;
 }
 
 // Remove unnecessary circles
 void LDetector::elFilter()
 {
-    // TODO: Change this
-    //for (unsigned j = 0; j < all.size(); ++j)
-    //{
-    //    all.at(j).configureL();
-    //    L L1 = all.at(j);
-    //    unsigned i = j+1;
-    //    while(i < all.size())
-    //    {
-    //        all.at(i).configureL();
-    //        L L2 = all.at(i);
-
-    //        if(L1.getTopPoint().x < L2.getTopPoint().x + 10 &&
-    //                L1.getTopPoint().x > L2.getTopPoint().x - 10 &&
-    //                L1.getTopPoint().y < L2.getTopPoint().x + 10 &&
-    //                L1.getTopPoint().y > L2.getTopPoint().x - 10 &&
-    //                L1.getOrientation() == L2.getOrientation())
-    //        {
-    //            all.erase(all.begin()+i);
-    //            //CODE TO REMOVE L2
-    //        }
-    //        else
-    //            i++;
-    //    }
-    //}
+    for (unsigned int j = 0; j < circles.size(); ++j)
+    {
+        Ball b(cv::Point(circles.at(j)[0], circles.at(j)[1]), circles.at(j)[2]);
+        unsigned i = j+1;
+        while(i < circles.size())
+        {
+            // TODO: tweak area values if necessary
+            if( (b.getRadius() > 50 || b.getRadius() < 40))
+            {
+                std::cout << "Erased a circle with radius of " << b.getRadius() << std::endl;
+                circles.erase(circles.begin() + i);
+            }
+            else
+            {
+                std::cout << "Kept circle with radius of " << b.getRadius() << std::endl;
+                i++;
+            }
+        }
+    }
+    if(circles.size() != 0)
+        ball.newBall(cv::Point(circles.at(0)[0], circles.at(0)[1]), circles.at(0)[2]);
+    else
+        ball.newBall(); // Create a null ball
 }
 
 // Gets the Circle objects (Vec3f objects)
 void LDetector::elContours()
 {
-    cv::Mat gray;
+    cv::Mat gray;// = threshed.clone();
 
     cv::Canny(threshed, gray, 0, 50, 5);
 
-    cv::imshow("Edges", gray);
-
     // dilate canny output to remove potential holes between edge segments
     dilate(gray, gray, cv::Mat());
-    
-    cv::HoughCircles(gray, circles, CV_HOUGH_GRADIENT, 2, gray.size().width/4);
+    erode(gray, gray, cv::Mat());
 
-    std::cout << "NumCircles: " << circles.size() << std::endl;
+    cv::imshow("Edges", gray);
+    
+    cv::HoughCircles(gray, circles, CV_HOUGH_GRADIENT, 2, gray.size().width/4, 100, 100, 40, 150);
 }
 
 // Return a Mat with all the contours printed on the original image
@@ -121,7 +128,7 @@ cv::Mat LDetector::show()
     return toRet;
 }
 
-Ball* LDetector::getBall()
+Ball LDetector::getBall()
 {
     return ball;
 }

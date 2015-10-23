@@ -31,13 +31,11 @@ class AppConfig
         void setIsFile(int isFile);
         void setIsDevice(int isDevice);
         void setIsHeadless(int isHeadless);
-        void setIsNetworking(int isNetworking);
         void setIsDebug(int debug);
         int getDeviceID();
         int getIsFile();
         int getIsDevice();
         int getIsHeadless();
-        int getIsNetworking();
         int getIsDebug();
         std::string getFileName();
     private:
@@ -46,7 +44,6 @@ class AppConfig
         int isFile;
         int isDevice;
         int isHeadless;
-        int isNetworking;
         int isDebug;
 };
 

@@ -22,7 +22,6 @@
 
 #include <iostream>
 #include <opencv2/opencv.hpp>
-#include "L.hpp"
 #include "Ball.hpp"
 
 class LDetector
@@ -30,17 +29,17 @@ class LDetector
     public:
         void process(cv::Mat foto);
         cv::Mat show();
-        Ball* getBall();
+        Ball getBall();
 
     private:
         cv::Mat image;
-        Ball* ball;
+        Ball ball;
         // Holds the circle contours
         std::vector<cv::Vec3f> circles;
 
         // Thresholding
         cv::Mat threshed;
-        std::vector<cv::Mat> channels;
+        std::vector<cv::Mat> hsv_channels;
 
         // Pipeline Methods
         void elSplit();

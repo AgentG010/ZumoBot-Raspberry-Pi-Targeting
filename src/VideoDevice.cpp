@@ -2,8 +2,7 @@
  *    Copyright 2012, 2013, 2014 Tushar Pankaj
  *
  *    This file is part of FRC Team 3341 Targeting.
- *
- *    FRC Team 3341 Targeting is free software: you can redistribute it and/or modify
+ * *    FRC Team 3341 Targeting is free software: you can redistribute it and/or modify
  *    it under the terms of the GNU General Public License as published by
  *    the Free Software Foundation, either version 3 of the License, or
  *    (at your option) any later version.
@@ -82,7 +81,7 @@ void VideoDevice::captureFromCamera()
 {
     while (! isFinished)
     {
-        camera >>image;
+        camera >> image;
         isReady = 1;
     }
 }

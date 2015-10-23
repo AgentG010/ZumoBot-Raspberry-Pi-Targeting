@@ -42,13 +42,11 @@ int main(int argc, char* argv[])
         else
             image = camera.getImage(config.getIsDebug());
 
-        std::cout << "Loaded image\n";
-
         detector.process(image);
 
-        bool foundL = detector.getBall() != NULL;
+        bool foundBall = !detector.getBall().getIsNull();
 
-        if (foundL)
+        if (foundBall)
         {
             processor.determineL(detector.getBall());
             processor.determineAzimuth();
@@ -59,7 +57,6 @@ int main(int argc, char* argv[])
             if(config.getIsDebug())
             {
                 processor.outputData();
-                std::cout << "Final distance (m): " << processor.getDistance() << std::endl;
             }
 
             if(!config.getIsHeadless())

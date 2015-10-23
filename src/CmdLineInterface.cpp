@@ -33,19 +33,17 @@
 
 void printUsage(std::string name)
 {
-    std::cerr << "Usage: " << name << " (-d <device_num> | -f <filename>) [--no-networking] [--headless] [--debug]" << std::endl;
+    std::cerr << "Usage: " << name << " (-d <device_num> | -f <filename>) [--headless] [--debug]" << std::endl;
 }
 
 CmdLineInterface::CmdLineInterface(int argc, char *argv[])
 {
     int isHeadless = 0;
-    int isNetworking = 1;
     int isDebug = 0;
 
     while (true) {
         static struct option long_options[] = {
             {"headless", no_argument, &isHeadless, 1},
-            {"no-networking", no_argument, &isNetworking, 0},
             {"debug", no_argument, &isDebug, 1},
             {"device", required_argument, 0, 'd'},
             {"file", required_argument, 0, 'f'},
@@ -95,15 +93,11 @@ CmdLineInterface::CmdLineInterface(int argc, char *argv[])
 
     config.setIsHeadless(isHeadless);
     config.setIsDebug(isDebug);
-    config.setIsNetworking(isNetworking);
 
     if(isDebug)
     {
         if(isHeadless)
             std::cout << "Headless mode\n";
-
-        if(!isNetworking)
-            std::cout << "No networking mode\n";
 
         if(config.getIsDevice())
             std::cout << "Device mode: using /dev/video" <<

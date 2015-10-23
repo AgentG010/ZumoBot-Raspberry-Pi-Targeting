@@ -27,7 +27,6 @@ AppConfig::AppConfig() :
     isFile(0),
     isDevice(0),
     isHeadless(0),
-    isNetworking(1),
     isDebug(0)
 {
 }
@@ -56,11 +55,6 @@ int AppConfig::getIsDevice()
 int AppConfig::getIsHeadless()
 {
     return isHeadless;
-}
-
-int AppConfig::getIsNetworking()
-{
-    return isNetworking;
 }
 
 int AppConfig::getIsDebug()
@@ -92,11 +86,6 @@ void AppConfig::setIsDevice(int inputIsDevice)
 void AppConfig::setIsHeadless(int inputIsHeadless)
 {
     isHeadless = inputIsHeadless;
-}
-
-void AppConfig::setIsNetworking(int inputIsNetworking)
-{
-    isNetworking = inputIsNetworking;
 }
 
 void AppConfig::setIsDebug(int debug)

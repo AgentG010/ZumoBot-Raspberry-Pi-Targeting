@@ -21,12 +21,11 @@
 #include <math.h>
 
 #include "LProcessor.hpp"
-#include "L.hpp"
 
 // Loads ball into LProcessor
-void LProcessor::determineL(Ball* b) 
+void LProcessor::determineL(Ball b) 
 {
-    ball = *b;
+    ball = b;
 }
 
 double LProcessor::getAzimuth()
@@ -50,21 +49,16 @@ void LProcessor::determineDistance()
     distance = RADIUS * focalLength / ball.getRadius();
 }
 
-// TODO: fix data output
 void LProcessor::outputData()
 {
-    //std::string dir[2] = {"Left Facing", "Right Facing"};
-    //std::cout << "Final Results" << std::endl;
-    //std::cout << "================================================================" << std::endl;
-    //std::cout << "L1: " << "Horizontal Length [In Pixels]: " << firstL.getHorizontalLength() << ", Vertical Length [In Pixels]: " << firstL.getVerticalLength() << ", Orientation: " << dir[firstL.getOrientation()] << std::endl;
-    //if (lCount > 1)
-    //    std::cout << "L2: " << "Horizontal Length [In Pixels]: " << secondL.getHorizontalLength() << ", Vertical Length [In Pixels]: " << secondL.getVerticalLength() << ", Orientation: " << dir[secondL.getOrientation()] << std::endl;
-    //std::cout << "Calculated Azimuth: " << azimuth << std::endl;
-    //std::cout << "Calculated Distance (Full Horizontal) [In Meters]: " << distanceFullHorizontal << std::endl;
-    //std::cout << "Calculated Distance (Vertical Average) [In Meters]: " << distanceVertical << std::endl;
-    //std::cout << "Calculated Distance (Full Horizontal) [In Feet]: " << distanceFullHorizontal * 3.2808 << std::endl;
-    //std::cout << "Calculated Distance (Vertical Average) [In Feet]: " << distanceVertical * 3.2808 << std::endl;
-    std::cout << "TODO: add printing data\n";
+    std::cout << "Final Results" << std::endl;
+    std::cout << "================================================================" << std::endl;
+    std::cout << "Radius [In Pixels]: " << ball.getRadius() << std::endl;
+    std::cout << "X Position: " << ball.getCenter().x << std::endl;
+    std::cout << "Y Position: " << ball.getCenter().y << std::endl;
+    std::cout << "Area: " << ball.getArea() << std::endl;
+    std::cout << "Calculated Azimuth [In Degrees]: " << azimuth << std::endl;
+    std::cout << "Calculated Distance [In Meters]: " << distance << std::endl;
 }
 
 
