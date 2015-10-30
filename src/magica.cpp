@@ -1,6 +1,8 @@
 #include <iostream>
-
 #include <boost/lexical_cast.hpp>
+
+#include "includes/arduino.h"
+#include "includes/firmata.h"
 #include "CmdLineInterface.hpp"
 #include "AppConfig.hpp"
 #include "GUIManager.hpp"

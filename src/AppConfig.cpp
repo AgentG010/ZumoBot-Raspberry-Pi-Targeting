@@ -27,7 +27,8 @@ AppConfig::AppConfig() :
     isFile(0),
     isDevice(0),
     isHeadless(0),
-    isDebug(0)
+    isDebug(0),
+    hasArduino(0)
 {
 }
 
@@ -62,6 +63,11 @@ int AppConfig::getIsDebug()
     return isDebug;
 }
 
+int AppConfig::getHasArduino()
+{
+    return hasArduino;
+}
+
 // Setters
 void AppConfig::setFileName(std::string inputFileName)
 {
@@ -91,4 +97,9 @@ void AppConfig::setIsHeadless(int inputIsHeadless)
 void AppConfig::setIsDebug(int debug)
 {
     isDebug = debug;
+}
+
+void AppConfig::setHasArduino(int arduino)
+{
+    hasArduino = arduino;
 }
