@@ -3,6 +3,9 @@
  * $Id$
 */
 
+#ifndef LIBFIRMATAPLUS
+#define LIBFIRMATAPLUS
+
 #include <limits.h>
 #include <list>
 #include <vector>
@@ -79,3 +82,5 @@ class Firmata {
 		int init();
     int sendValueAsTwo7bitBytes(int value);
 };
+
+#endif

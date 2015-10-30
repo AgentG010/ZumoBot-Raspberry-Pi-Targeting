@@ -28,6 +28,8 @@ int main()
 	 
 		// Reduce the noise so we avoid false circle detection
 		GaussianBlur( gray, gray, Size(9, 9), 2, 2 );
+        Canny(gray, gray, 0, 50, 3);
+        imshow("edges", gray);
 	 
 		vector<Vec3f> circles;
 	 
